@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}
+List of attendees
+{% endblock %}
+
+{% block content %}
+    <div class="columns is-centered">
+        <div class="column is-4">
+            <div class="box">
+                <div class="container content">
+                    <h1 class="title">List of attendees for the event: <br>
+                        <a href="{% url 'events:event_detail' event.id %}">{{ event.title }}</a>
+                    </h1>
+                    <h2 class="subtitle">
+                        Number of attendees: {{ event.attendees.count }}
+                    </h2>
+                    <h3 class="subtitle">Spots available: {{ event.get_available_spots|safe }}</h3>
+                </div>
+                <div class="container">
+                    <ul>
+                        {% for attendee in event.attendees.all %}
+                            {% if attendee.get_full_name %}
+                                <li>{{ attendee.get_full_name|capfirst }}</li>
+                            {% else %}
+                                <li>{{ attendee|capfirst }}</li>
+                            {% endif %}
+
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="container">
+                    {% if user in event.attendees.all %}
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="submit" value="Quit Event" class="button is-warning">
+                        </form>
+                    {% else %}
+                        {% if event.available %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="submit" value="Attend" class="button is-primary">
+                            </form>
+                        {% else %}
+                            Sorry there are no spots left in this event
+                        {% endif %}
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

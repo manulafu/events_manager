@@ -1,0 +1,85 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %} | Events Manager</title>
+
+    {# My CSS #}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    {# Bulma #}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+</head>
+<body>
+
+    <nav class="navbar custom-navbar is-dark">
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                <h1 class="subtitle">
+                    <a href="{% url 'events:index' %}">Events Manager</a>
+                </h1>
+            </div>
+        </div>
+        <div class="navbar-start">
+            <a href="{% url 'events:event_list' %}" class="navbar-item">Events</a>
+            <a href="{% url 'events:create_event' %}" class="navbar-item">Create Event</a>
+        </div>
+
+        <div class="navbar-end">
+            {% if user.is_authenticated %}
+                <div class="navbar-item">
+                    <button class="button is-outlined is-primary">
+                        <span class="icon">
+                            <i class="fas fa-user is-small fa-lg"></i>
+                        </span>
+                        <span>@{{ user.username }}</span>
+                    </button>
+                </div>
+                <div class="navbar-item">
+                    <a href="{% url 'events:logout' %}?next={{ request.get_full_path }}" class="button is-primary">Logout</a>
+                </div>
+                {% if not user.is_staff %}
+                    <div class="navbar-item">
+                        <a href="{% url 'events:delete_user' user.id %}" class="button is-danger">Delete Account</a>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="navbar-end is-dark">
+                    <div class="buttons">
+                        <div class="navbar-item">
+                            <a href="{% url 'events:signup' %}" class="button is-primary">Sign Up</a>
+                        </div>
+                        <div class="navbar-item">
+                            <a href="{% url 'events:login' %}" class="button">Login</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </nav>
+
+
+    <section class="section" style="min-height: 70vh">
+        {% block content %}
+
+        {% endblock %}
+    </section>
+
+    <footer class="footer">
+        <div class="columns is-centered">
+            <div class="column is-8 has-text-centered">
+                Event Manager done by <a href="https://www.linkedin.com/in/manuel-esquivias/">Manuel Esquivias</a>. 2020
+            </div>
+        </div>
+    </footer>
+
+    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    {% block scripts %}
+
+    {% endblock %}
+</body>
+</html>

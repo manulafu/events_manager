@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load  static %}
+
+{% block title %}
+{{ event.title }}
+{% endblock %}
+
+{% block content %}
+    <div class="columns">
+        <div class="column is-6">
+            <h1 class="title">Event: <strong>{{ event.title }}</strong></h1>
+            <h3 class="subtitle">Date: {{ event.date|date:"M d, Y" }}</h3>
+            <p>From: {{ event.startTime }} To: {{ event.endTime }}</p>
+            <div class="container my-section">
+                <p><strong>Description: </strong>{{ event.description }}</p>
+            </div>
+            <br>
+            <div class="columns is-centered my-section">
+                <div class="column is-4">
+                    <a href="{% url 'events:attendees_list' event.id %}" class="button">All Attendees</a>
+                </div>
+
+            </div>
+        </div>
+        <div class="column is-3">
+            <div class="container">
+                <figure>
+                    <img src="{{ event.image.url }}" alt="{{ event.title }} image">
+                </figure>
+            </div>
+            <br>
+            <div class="container">
+                {% if user.is_authenticated %}
+                    <div class="columns is-centered my-section">
+                        <div class="column is-4">
+                            {% if user in event.attendees.all %}
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <input type="submit" value="Quit Event" class="button is-warning">
+                                </form>
+                            {% else %}
+                                {% if event.available %}
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="submit" value="Attend" class="button is-primary">
+                                    </form>
+                                {% else %}
+                                    Sorry, no spots
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        <div class="column is-4">
+                            <a href="{% url 'events:delete_event' event.id %}" class="button is-danger">Delete</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <p>
+                        <strong><a href="{% url 'events:login' %}">Login </a></strong>
+                        for more options
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

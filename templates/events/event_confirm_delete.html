@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ event }}
+{% endblock %}
+
+{% block content %}
+    <div class="columns is-centered">
+        <div class="column is-5">
+            <div class="box">
+                <form method="POST">
+                    {% csrf_token %}
+                    <h3 class="subtitle">Are you sure you want to delete: <strong>{{ event.title }}?</strong></h3>
+                    <input type="submit" value="Confirm" class="button is-danger">
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

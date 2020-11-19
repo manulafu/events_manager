@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Signup
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-3">
+                <div class="card">
+                    <div class="card-content">
+                        <h1 class="subtitle">Sign Up</h1>
+                        <form method="post">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <div class="field">
+                                    <label class="label">{{ field.label }}</label>
+                                    <div class="control">
+                                        {{ field }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <input type="submit" value="Sign Up" class="button is-primary">
+
+                            {% if form.errors %}
+                                {% for key, value in form.errors.items %}
+                                    {{ value }}
+                                {% endfor %}
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
